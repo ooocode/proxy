@@ -8,7 +8,7 @@ namespace CoreProxy.Common
 {
     static public class Crypto
     {
-        public static string Password { get; set; } = "Oyk1186053605";
+        public static string Password { get; set; } = "gfhhsjl;itgdrfh";
 
 
         private static byte[] MakeKey()
