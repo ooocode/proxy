@@ -6,6 +6,9 @@ using System.Text;
 
 namespace CoreProxy.Common
 {
+    /// <summary>
+    /// AES-256-CBC加密
+    /// </summary>
     static public class Crypto
     {
         /// <summary>

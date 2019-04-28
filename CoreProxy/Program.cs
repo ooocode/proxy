@@ -43,7 +43,7 @@ namespace CoreProxy
         static async System.Threading.Tasks.Task Main(string[] args)
         {
             bool IsLocalDebug = false;
-            if (IsLocalDebug)
+            if (IsLocalDebug)  //本机测试用
             {
                 //http pac
                 StartHttpSeverice();
@@ -60,6 +60,7 @@ namespace CoreProxy
             }
             else
             {
+                //windows
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     //http pac

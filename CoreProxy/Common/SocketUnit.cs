@@ -286,7 +286,6 @@ namespace CoreProxy.Common
                             break;
                         }
                     }
-
                     socketState.Socket.BeginReceive(socketState.Buff, 0, socketState.Buff.Length, SocketFlags.None, OnRecvCallbackHandleFrame, socketState);
                 }
             }

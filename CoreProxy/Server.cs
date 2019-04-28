@@ -61,7 +61,6 @@ namespace CoreProxy
                 {
                     Console.WriteLine(ex.Message);
                 }
-
             };
             socketBrowser.OnRecv += SocketBrowser_OnRecv;
             socketBrowser.ReceiveAndHandleFrame();

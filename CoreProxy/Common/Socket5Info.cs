@@ -7,6 +7,9 @@ using System.Text;
 
 namespace CoreProxy.Common
 {
+    /// <summary>
+    /// socket5信息
+    /// </summary>
     class Socket5Info
     {
         // ver 版本号 固定 0x05
@@ -35,6 +38,12 @@ namespace CoreProxy.Common
         /// </summary>
         public int Port { get; set; }
 
+
+        /// <summary>
+        /// 解析socket5信息
+        /// </summary>
+        /// <param name="vs"></param>
+        /// <returns></returns>
         public bool TryParse(byte[] vs)
         {
             try
@@ -77,12 +86,8 @@ namespace CoreProxy.Common
 
         public override string ToString()
         {
-            //string str = string.Format("{0}{1}{2}{3}{4}{5}", Ver, Cmd, Rsv, Atype, Address, Port);
-            //return Encoding.UTF8.GetBytes(str);
-
             string strAddr = System.Text.Encoding.UTF8.GetString(Address);
-            string str = string.Format("ver={0} cmd={1} rsv={2} atype={3} address={4} port={5}", Ver, Cmd, Rsv, Atype, strAddr, Port);
-            return str;
+            return string.Format("ver={0} cmd={1} rsv={2} atype={3} address={4} port={5}", Ver, Cmd, Rsv, Atype, strAddr, Port);
         }
 
         public (bool sucess, Socket remote) ConnectThisSocket()
@@ -94,7 +99,6 @@ namespace CoreProxy.Common
                 {
                     remote.Connect(i, Port);
                     remote.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
-                    //Console.WriteLine("连接 " + i.ToString());
                     return (true, remote);
                 }
                 catch (Exception ex)

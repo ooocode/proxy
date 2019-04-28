@@ -14,7 +14,6 @@ namespace CoreProxy
     public class Local
     {
         Socket _server = null;
-
         string _remoteAddress;
         int _remotePort;
 
