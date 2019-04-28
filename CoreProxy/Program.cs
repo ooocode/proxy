@@ -42,14 +42,25 @@ namespace CoreProxy
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
-            Config config = new Config
+            Config config = null;
+            string configFilePath = AppContext.BaseDirectory + "\\config.conf";
+            if (!File.Exists(configFilePath))
             {
-                Password = "Oyk1186053605",
-                LocalAddress = "127.0.0.1",
-                LocalPort = 1080,
-                RemoteAddress = "23.95.67.191",
-                RemotePort = 2019
-            };
+                config = new Config
+                {
+                    Password = "gsag32!76*#6fsahjlm==./fsafsafsaf",
+                    LocalAddress = "127.0.0.1",
+                    LocalPort = 1080,
+                    RemoteAddress = "23.95.67.191",
+                    RemotePort = 2019
+                };
+                var stringConfig = Newtonsoft.Json.JsonConvert.SerializeObject(config);
+                File.WriteAllText(AppContext.BaseDirectory + "\\config.conf", stringConfig);
+            }
+            else
+            {
+                config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFilePath));
+            }
 
             bool IsLocalDebug = false;
             if (IsLocalDebug)  //本机测试用
