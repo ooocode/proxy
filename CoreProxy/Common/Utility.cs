@@ -21,10 +21,5 @@ namespace CoreProxy.Common
             }
             return vs;
         }
-
-        void ArrayContact()
-        {
-            
-        }
     }
 }

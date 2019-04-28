@@ -63,45 +63,26 @@ namespace CoreProxy
             {
                 try
                 {
-                    //Console.WriteLine("浏览器异常" + msg);
-                    //s.Socket.Shutdown(SocketShutdown.Both);
                     s.Socket.Close();
-                    //s.Socket.Dispose();
-
-                    //(s.UserData as SocketUnit).Socket.Shutdown(SocketShutdown.Both);
                     (s.UserData as SocketUnit).Socket.Close();
-                    //(s.UserData as SocketUnit).Socket.Dispose();
-
-                    //Console.WriteLine("浏览器和远程都关闭");
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                 }
-
-
             };
             socketRemote.OnException += (string msg, SocketUnit s) =>
             {
                 try
                 {
-                    //Console.WriteLine("远程" + msg);
-                    //s.Socket.Shutdown(SocketShutdown.Both);
                     s.Socket.Close();
-                    ////s.Socket.Dispose();
-
-                    //(s.UserData as SocketUnit).Socket.Shutdown(SocketShutdown.Both);
                     (s.UserData as SocketUnit).Socket.Close();
-                    ////(s.UserData as SocketUnit).Socket.Dispose();
-                    //Console.WriteLine("浏览器和远程都关闭");
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                 }
-
             };
-
             socketBrowser.OnRecv += SocketBrowser_OnRecv;
 
             //浏览器普通接收
