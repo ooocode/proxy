@@ -51,7 +51,7 @@ namespace CoreProxy.Common
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
             return new byte[] { };
         }
@@ -83,7 +83,7 @@ namespace CoreProxy.Common
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
             return new byte[] { };
         }
