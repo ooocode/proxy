@@ -1,2 +1,2 @@
 # proxy
-代理
+dot net core 3 科学上网
