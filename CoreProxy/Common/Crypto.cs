@@ -8,16 +8,22 @@ namespace CoreProxy.Common
 {
     static public class Crypto
     {
+        /// <summary>
+        /// 密码
+        /// </summary>
         public static string Password { get; set; } = "gfhhsjl;itgdrfh";
 
 
+        /// <summary>
+        /// 产生256位密码
+        /// </summary>
+        /// <returns></returns>
         private static byte[] MakeKey()
         {
             while (Password.Length < 32)
             {
                 Password += "0";
             }
-
             return Encoding.UTF8.GetBytes(Password.Substring(0, 32));
         }
 
@@ -26,7 +32,7 @@ namespace CoreProxy.Common
         /// 加密
         /// </summary>
         /// <param name="text">需要加密的文本</param>
-        /// <returns>返回[key][payload]</returns>
+        /// <returns>返回[iv][payload]</returns>
         public static byte[] EncryptAES(byte[] data)
         {
             try
@@ -79,7 +85,6 @@ namespace CoreProxy.Common
                         return transform.TransformFinalBlock(data, 16, data.Length - 16);
                     }
                 }
-
             }
             catch (Exception ex)
             {
