@@ -25,9 +25,15 @@ namespace CoreProxy.Common
         //0x04表示IPv6地址，此时DST.ADDR部分16个字节长度。
         public byte Atype { get; set; }
 
+        /// <summary>
+        /// 目标地址
+        /// </summary>
+        public byte[] Address { get; set; }
 
-        public byte[] Address { get; set; }//目标ip
-        public int Port { get; set; }//目标端口
+        /// <summary>
+        /// 端口
+        /// </summary>
+        public int Port { get; set; }
 
         public bool TryParse(byte[] vs)
         {
