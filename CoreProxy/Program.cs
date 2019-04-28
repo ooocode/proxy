@@ -42,8 +42,8 @@ namespace CoreProxy
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
-            bool 本地测试 = false;
-            if (本地测试)
+            bool IsLocalDebug = false;
+            if (IsLocalDebug)
             {
                 //http pac
                 StartHttpSeverice();
