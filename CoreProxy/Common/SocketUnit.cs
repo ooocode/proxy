@@ -10,6 +10,7 @@ namespace CoreProxy.Common
     public delegate bool OnAction(byte[] data, SocketUnit socketUnit);
 
     public delegate void OnException(string msg, SocketUnit socketUnit);
+
     public class SocketState
     {
         public Socket Socket { get; set; }
@@ -24,6 +25,9 @@ namespace CoreProxy.Common
         /// </summary>
         public OnAction Action { get; set; }
 
+        /// <summary>
+        /// 解析出一帧的长度
+        /// </summary>
         public int FrameLenth { get; set; } = 0;
 
 
@@ -61,6 +65,9 @@ namespace CoreProxy.Common
     {
         public Socket Socket { get; set; } = null;
 
+        /// <summary>
+        /// 用户附加数据
+        /// </summary>
         public object UserData { get; set; } = null;
 
 
@@ -185,7 +192,6 @@ namespace CoreProxy.Common
             try
             {
                 int lenth = socketState.Socket.EndReceive(ar);
-
                 if (lenth <= 0)
                 {
                     OnException("OnRecvCallback lenth <= 0", this);

@@ -19,17 +19,16 @@ namespace CoreProxy
 
         public void Configure(IApplicationBuilder app)
         {
-            
             app.UseOwin(pipeline =>
             {
                 pipeline(next => OwinHello);
             });
         }
 
+
         public Task OwinHello(IDictionary<string, object> environment)
         {
             string responseText = "please scanf http://127.0.0.1:5000/pac  or http://127.0.0.1:5000/global";
-
             try
             {
                 string reqPath = environment["owin.RequestPath"].ToString();

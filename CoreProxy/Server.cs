@@ -59,14 +59,12 @@ namespace CoreProxy
                 }
                 catch (Exception ex)
                 {
-
+                    Console.WriteLine(ex.Message);
                 }
 
             };
             socketBrowser.OnRecv += SocketBrowser_OnRecv;
             socketBrowser.ReceiveAndHandleFrame();
-
-
         }
 
         //接收到浏览器数据
@@ -87,8 +85,9 @@ namespace CoreProxy
                             s.Socket.Close();
                             (s.UserData as SocketUnit).Socket.Close();
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            Console.WriteLine(ex.Message);
                         }
                     };
                     socketRemote.OnRecv += SocketRemote_OnRecv;
