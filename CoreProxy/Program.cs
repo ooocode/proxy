@@ -42,6 +42,15 @@ namespace CoreProxy
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
+            Config config = new Config
+            {
+                Password = "Oyk1186053605",
+                LocalAddress = "127.0.0.1",
+                LocalPort = 1080,
+                RemoteAddress = "23.95.67.191",
+                RemotePort = 2019
+            };
+
             bool IsLocalDebug = false;
             if (IsLocalDebug)  //本机测试用
             {
@@ -51,14 +60,14 @@ namespace CoreProxy
                 new Thread(new ParameterizedThreadStart(async (obj) =>
                 {
                     Server server = new CoreProxy.Server();
-                    await server.StartAsync(2019);
+                    await server.StartAsync(config.RemotePort);
 
                 })).Start();
 
                 Local local = new Local();
-                await local.StartAsync("127.0.0.1", 2019);
+                await local.StartAsync(config.LocalAddress, config.RemotePort,config.LocalPort);
             }
-            else
+            else  //生产环境
             {
                 //windows
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -67,12 +76,12 @@ namespace CoreProxy
                     StartHttpSeverice();
 
                     Local local = new Local();
-                    await local.StartAsync("23.95.67.191", 2019);
+                    await local.StartAsync(config.RemoteAddress, config.RemotePort,config.LocalPort);
                 }
                 else
                 {
                     Server server = new Server();
-                    await server.StartAsync(2019);
+                    await server.StartAsync(config.RemotePort);
                 }
             }
         }

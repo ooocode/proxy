@@ -23,15 +23,15 @@ namespace CoreProxy
             _server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
         }
 
-        public async Task StartAsync(string remoteAddress, int remotePort)
+        public async Task StartAsync(string remoteAddress, int remotePort,int localListenPort)
         {
             _remoteAddress = remoteAddress;
             _remotePort = remotePort;
             try
             {
-                _server.Bind(new IPEndPoint(IPAddress.Any, 1080));
+                _server.Bind(new IPEndPoint(IPAddress.Any, localListenPort));
                 _server.Listen(100);
-                Console.WriteLine("客户端正在监听1080端口");
+                Console.WriteLine($"客户端正在监听{localListenPort}端口");
                 while (true)
                 {
                     var browser = await _server.AcceptAsync();
