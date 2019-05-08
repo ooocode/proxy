@@ -55,7 +55,7 @@ namespace CoreProxy
                     RemotePort = 2019
                 };
                 var stringConfig = Newtonsoft.Json.JsonConvert.SerializeObject(config);
-                File.WriteAllText(AppContext.BaseDirectory + "\\config.conf", stringConfig);
+                await File.WriteAllTextAsync(AppContext.BaseDirectory + "\\config.conf", stringConfig);
             }
             else
             {

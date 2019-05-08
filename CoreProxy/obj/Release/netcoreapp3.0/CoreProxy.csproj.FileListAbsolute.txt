@@ -45,3 +45,4 @@ C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.dll
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.pdb
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\bin\Release\netcoreapp3.0\Newtonsoft.Json.dll
+C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.csprojAssemblyReference.cache
