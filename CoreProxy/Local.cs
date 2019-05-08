@@ -23,6 +23,7 @@ namespace CoreProxy
             _server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
         }
 
+
         public async Task StartAsync(string remoteAddress, int remotePort,int localListenPort)
         {
             _remoteAddress = remoteAddress;
@@ -40,7 +41,7 @@ namespace CoreProxy
             }
             catch (Exception ex)
             {
-                _server.Dispose();
+                _server.Close();
                 Console.WriteLine("local StartAsync " + ex.Message);
             }
         }
@@ -55,69 +56,55 @@ namespace CoreProxy
             SocketUnit socketBrowser = new SocketUnit(browser);
             SocketUnit socketRemote = new SocketUnit(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
 
-            socketBrowser.UserData = socketRemote;
-            socketRemote.UserData = socketBrowser;
-
-            socketBrowser.OnException += (string msg, SocketUnit s) =>
-            {
-                try
-                {
-                    s.Socket.Close();
-                    (s.UserData as SocketUnit).Socket.Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            };
-            socketRemote.OnException += (string msg, SocketUnit s) =>
-            {
-                try
-                {
-                    s.Socket.Close();
-                    (s.UserData as SocketUnit).Socket.Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            };
-            socketBrowser.OnRecv += SocketBrowser_OnRecv;
-
             //浏览器普通接收
-            socketBrowser.Receive();
-        }
-
-        private bool SocketBrowser_OnRecv(byte[] data, SocketUnit socketBrowser)
-        {
-            SocketUnit socketRemote = socketBrowser.UserData as SocketUnit;
-
-            //接收到浏览器数据
-            if (data.Length == 3 && string.Join(",", data) == "5,1,0")
+            new Task(async () => 
             {
-                if (socketRemote.Connect(_remoteAddress, _remotePort))
+                try
                 {
-                    socketRemote.OnRecv += SocketRemote_OnRecv;
-                    socketRemote.ReceiveAndHandleFrame();
-                    return socketBrowser.Send(new byte[] { 5, 0 });
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                //加密并添加头部长度发送到远程服务器
-                return socketRemote.SendWithLenth(Crypto.EncryptAES(data));
-            }
-        }
+                    while (true)
+                    {
+                        var browserData = await socketBrowser.ReceiveAsync();
+                        //接收到浏览器数据
+                        if (browserData.Length == 3 && string.Join(",", browserData) == "5,1,0")
+                        {
+                            await socketRemote.ConnectAsync(_remoteAddress, _remotePort);
+                            await socketBrowser.SendAsync(new byte[] { 5, 0 });
 
-        private bool SocketRemote_OnRecv(byte[] data, SocketUnit socketRemote)
-        {
-            SocketUnit socketBrowser = socketRemote.UserData as SocketUnit;
-            //接收到远程数据解密发往浏览器
-            return socketBrowser.Send(Crypto.DecryptAES(data));
+                            new Task(async () =>
+                            {
+                                try
+                                {
+                                    while (true)
+                                    {
+                                        var remoteData = await socketRemote.ReceiveFrameAsync();
+                                        foreach (var frame in remoteData)
+                                        {
+                                            //接收到远程数据解密发往浏览器
+                                            await socketBrowser.SendAsync(Crypto.DecryptAES(frame));
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    socketBrowser.Socket.Close();
+                                    socketRemote.Socket.Close();
+                                }
+
+                            }).Start();
+                        }
+                        else
+                        {
+                            //加密并添加头部长度发送到远程服务器
+                            await socketRemote.SendWithLenthAsync(Crypto.EncryptAES(browserData));
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    socketBrowser.Socket.Close();
+                    socketRemote.Socket.Close();
+                }
+            }).Start();
         }
     }
 }

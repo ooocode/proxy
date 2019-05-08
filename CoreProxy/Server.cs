@@ -37,7 +37,7 @@ namespace CoreProxy
             }
             catch (Exception ex)
             {
-                _server.Dispose();
+                _server.Close();
                 Console.WriteLine("server StartAsync " + ex.Message);
             }
         }
@@ -50,70 +50,60 @@ namespace CoreProxy
         void TcpHandler(Socket browser)
         {
             SocketUnit socketBrowser = new SocketUnit(browser);
-            socketBrowser.OnException += (string msg, SocketUnit s) =>
+            SocketUnit socketRemote = null;
+            new Task(async () => 
             {
                 try
                 {
-                    s.Socket.Close();
-                    (s.UserData as SocketUnit).Socket.Close();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            };
-            socketBrowser.OnRecv += SocketBrowser_OnRecv;
-            socketBrowser.ReceiveAndHandleFrame();
-        }
-
-        //接收到浏览器数据
-        private bool SocketBrowser_OnRecv(byte[] data, SocketUnit socketBrowser)
-        {
-            byte[] vs = Crypto.DecryptAES(data);
-            Socket5Info socket5Info = new Socket5Info();
-            if (socket5Info.TryParse(vs))
-            {
-                var remoteResult = socket5Info.ConnectThisSocket();
-                if (remoteResult.sucess)
-                {
-                    SocketUnit socketRemote = new SocketUnit(remoteResult.remote);
-                    socketRemote.OnException += (string msg, SocketUnit s) =>
+                    while (true)
                     {
-                        try
+                        var browserFrames = await socketBrowser.ReceiveFrameAsync();
+                        foreach(var frame in browserFrames)
                         {
-                            s.Socket.Close();
-                            (s.UserData as SocketUnit).Socket.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    };
-                    socketRemote.OnRecv += SocketRemote_OnRecv;
-                    socketRemote.Receive();
-                    socketBrowser.UserData = socketRemote;
-                    socketRemote.UserData = socketBrowser;
+                            var browserData = Crypto.DecryptAES(frame);
+                            Socket5Info socket5Info = new Socket5Info();
+                            if (socket5Info.TryParse(browserData))
+                            {
+                                var remoteResult = socket5Info.ConnectThisSocket();
+                                if (remoteResult.sucess)
+                                {
+                                    socketRemote = new SocketUnit(remoteResult.remote);
+                                    new Task(async () => {
+                                        try
+                                        {
+                                            while (true)
+                                            {
+                                                var remoteData = await socketRemote.ReceiveAsync();
+                                                await socketBrowser.SendWithLenthAsync(Crypto.EncryptAES(remoteData));
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            socketBrowser.Socket.Close();
+                                            socketRemote.Socket.Close();
+                                        }
+                                    }).Start();
 
-                    byte[] sendData = Crypto.EncryptAES(new byte[] { 0x05, 0x00, 0x00, 0x01, 0x7f, 0x00, 0x00, 0x01, 0x1f, 0x40 });
-                    return socketBrowser.SendWithLenth(sendData);
+
+                                    byte[] sendData = Crypto.EncryptAES(new byte[] { 0x05, 0x00, 0x00, 0x01, 0x7f, 0x00, 0x00, 0x01, 0x1f, 0x40 });
+                                    await socketBrowser.SendWithLenthAsync(sendData);
+                                }
+                            }
+                            else
+                            {
+                                //发送到远程服务器
+                                await socketRemote.SendAsync(browserData);
+                            }
+                        }
+                       
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    return false;
+                    socketBrowser.Socket.Close();
+                    socketRemote.Socket.Close();
                 }
-            }
-            else
-            {
-                //发送到远程服务器
-                return (socketBrowser.UserData as SocketUnit).Send(vs);
-            }
-        }
-
-        //加密发往ss local
-        private bool SocketRemote_OnRecv(byte[] data, SocketUnit remote)
-        {
-            SocketUnit socketBrowser = remote.UserData as SocketUnit;
-            return socketBrowser.SendWithLenth(Crypto.EncryptAES(data));
+            }).Start();
         }
     }
 }

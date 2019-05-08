@@ -38,7 +38,6 @@ C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\bin\Release\netcoreapp3.0\Microsoft
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\bin\Release\netcoreapp3.0\Microsoft.Net.Http.Headers.dll
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\bin\Release\netcoreapp3.0\System.IO.Pipelines.dll
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\bin\Release\netcoreapp3.0\System.Text.Encodings.Web.dll
-C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.csprojAssemblyReference.cache
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.csproj.CoreCompileInputs.cache
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.AssemblyInfoInputs.cache
 C:\Users\love\Desktop\SS\CoreProxy\CoreProxy\obj\Release\netcoreapp3.0\CoreProxy.AssemblyInfo.cs
