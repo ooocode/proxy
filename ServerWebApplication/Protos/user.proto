@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "UserGrpcService";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+package user;
+
+// The greeting service definition.
+service Message {
+  //通过用户id查找用户
+  rpc SendMessage (stream MessagePack) returns (stream MessagePack);
+
+  //获取目标服务器信息
+  rpc GetTagetWebSocketInfo(GetTagetWebSocketInfoReq) returns (IdReply);
+}
+
+message MessagePack{
+    string BrowserId = 1;
+    bytes Content = 2;
+}
+
+message IdReply{
+    string Id = 1;
+}
+
+message GetTagetWebSocketInfoReq{
+    //要连接的目标服务地址
+    string Address = 1;
+
+    //要连接的目标服务端口
+    string Port = 2;
+
+    //浏览器id
+    string BrowserId = 3;
+}

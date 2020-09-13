@@ -1,29 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="Current">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>F:\SS\CoreProxy\Backup\CoreProxy\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Remove="wwwroot\global.txt" />
     <Content Remove="wwwroot\pac.txt" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0-preview.8.20407.11" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0-preview.8.20407.11" />
     <PackageReference Include="System.Reactive" Version="4.4.1" />
   </ItemGroup>
-
   <ItemGroup>
     <Protobuf Include="..\ServerWebApplication\Protos\user.proto" GrpcServices="Client">
       <Link>Protos\user.proto</Link>
     </Protobuf>
   </ItemGroup>
-
   <ItemGroup>
     <None Update="config.conf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -35,7 +33,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
     <None Include="wwwroot\global.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -44,5 +41,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
