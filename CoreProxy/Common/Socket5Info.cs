@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoreProxy.Common
 {
@@ -38,6 +39,15 @@ namespace CoreProxy.Common
         /// </summary>
         public int Port { get; set; }
 
+        bool CanParse(byte[] data)
+        {
+            if (data.Length > 3 && data[0] == 0x05 && data[1] == 0x01 && data[2] == 0x00)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// 解析socket5信息
@@ -46,40 +56,33 @@ namespace CoreProxy.Common
         /// <returns></returns>
         public bool TryParse(byte[] vs)
         {
-            try
+            if (CanParse(vs))
             {
-                if (vs.Length > 3 && vs[0] == 0x05 && vs[1] == 0x01 && vs[2] == 0x00)
+                Ver = vs.Skip(0).Take(1).ToArray()[0];
+                Cmd = vs.Skip(1).Take(1).ToArray()[0];
+                Rsv = vs.Skip(2).Take(1).ToArray()[0];
+                Atype = vs.Skip(3).Take(1).ToArray()[0];
+
+                if (Atype == 0x01)    //ip v4
                 {
-                    Ver = vs.Skip(0).Take(1).ToArray()[0];
-                    Cmd = vs.Skip(1).Take(1).ToArray()[0];
-                    Rsv = vs.Skip(2).Take(1).ToArray()[0];
-                    Atype = vs.Skip(3).Take(1).ToArray()[0];
-
-                    if (Atype == 0x01)    //ip v4
-                    {
-                        Address = vs.Skip(4).Take(4).ToArray();
-                        Port = BitConverter.ToInt16(vs, 8);
-                    }
-                    else if (Atype == 0x03)   //域名
-                    {
-                        int domainNameLenth = vs.Skip(4).Take(1).ToArray()[0];
-                        Address = vs.Skip(5).Take(domainNameLenth).ToArray();
-
-                        byte[] port = vs.Skip(5 + domainNameLenth).Take(2).ToArray();
-
-                        Port = Convert.ToInt16((port[0].ToString("X2") + port[1].ToString("X2")), 16);
-                    }
-                    else if (Atype == 0x04)  //ip v6
-                    {
-                        Address = vs.Skip(4).Take(16).ToArray();
-                        Port = BitConverter.ToInt16(vs, 20);
-                    }
-                    return true;
+                    Address = vs.Skip(4).Take(4).ToArray();
+                    Port = BitConverter.ToInt16(vs, 8);
                 }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                else if (Atype == 0x03)   //域名
+                {
+                    int domainNameLenth = vs.Skip(4).Take(1).ToArray()[0];
+                    Address = vs.Skip(5).Take(domainNameLenth).ToArray();
+
+                    byte[] port = vs.Skip(5 + domainNameLenth).Take(2).ToArray();
+
+                    Port = Convert.ToInt16((port[0].ToString("X2") + port[1].ToString("X2")), 16);
+                }
+                else if (Atype == 0x04)  //ip v6
+                {
+                    Address = vs.Skip(4).Take(16).ToArray();
+                    Port = BitConverter.ToInt16(vs, 20);
+                }
+                return true;
             }
             return false;
         }
@@ -90,24 +93,26 @@ namespace CoreProxy.Common
             return string.Format("ver={0} cmd={1} rsv={2} atype={3} address={4} port={5}", Ver, Cmd, Rsv, Atype, strAddr, Port);
         }
 
-        public (bool sucess, Socket remote) ConnectThisSocket()
+        public async Task<Socket> ConnectThisSocketAsync()
         {
-            foreach (var i in Dns.GetHostEntry(Encoding.UTF8.GetString(Address)).AddressList)
+            //foreach (var i in Dns.GetHostEntry(Encoding.UTF8.GetString(Address)).AddressList)
             {
-                Socket remote = new Socket(i.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                try
+                Socket remote = new Socket(SocketType.Stream, ProtocolType.Tcp);
+                //try
                 {
-                    remote.Connect(i, Port);
+                    await remote.ConnectAsync(Encoding.UTF8.GetString(Address), Port);
+                    //remote.Connect(i, Port);
                     remote.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
-                    return (true, remote);
+                    return remote;
                 }
-                catch (Exception ex)
+                //catch (Exception ex)
                 {
-                    remote.Dispose();
-                    Console.WriteLine("连接失败：" + ex.Message + " 地址：" + Encoding.UTF8.GetString(Address));
+                   // remote.Close();
+                    //Console.WriteLine("连接失败：" + ex.Message + " 地址：" + Encoding.UTF8.GetString(Address));
                 }
             }
-            return (false, null);
+
+            //throw new Exception("没有可用socket");
         }
     }
 }

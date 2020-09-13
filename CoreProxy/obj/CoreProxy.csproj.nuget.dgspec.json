@@ -1,40 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\love\\Desktop\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {}
+    "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {}
   },
   "projects": {
-    "C:\\Users\\love\\Desktop\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {
+    "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\love\\Desktop\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
+        "projectUniqueName": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
         "projectName": "CoreProxy",
-        "projectPath": "C:\\Users\\love\\Desktop\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
-        "packagesPath": "C:\\Users\\love\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\love\\Desktop\\SS\\CoreProxy\\CoreProxy\\obj\\",
+        "projectPath": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
+        "packagesPath": "C:\\Users\\94386\\.nuget\\packages\\",
+        "outputPath": "F:\\SS\\CoreProxy\\CoreProxy\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\love\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\94386\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.0"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {},
-          "https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.0": {
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {}
           }
         },
@@ -45,43 +37,45 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.0": {
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Hosting": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.AspNetCore.Owin": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.AspNetCore.Server.Kestrel": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.NETCore.Platforms": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.0.0-preview4.19212.13, )",
-              "autoReferenced": true
-            },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[12.0.2, )"
+              "version": "[12.0.3, )"
             },
-            "runtime.win-x64.Microsoft.NETCore.DotNetAppHost": {
-              "include": "None",
-              "suppressParent": "All",
+            "System.Diagnostics.PerformanceCounter": {
               "target": "Package",
-              "version": "[3.0.0-preview4-27615-11, )",
-              "autoReferenced": true
+              "version": "[5.0.0-preview.8.20407.11, )"
+            },
+            "System.IO.Pipelines": {
+              "target": "Package",
+              "version": "[5.0.0-preview.8.20407.11, )"
+            },
+            "System.Reactive": {
+              "target": "Package",
+              "version": "[4.4.1, )"
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.8.20417.9\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CoreProxy.Common
@@ -10,14 +10,73 @@ namespace CoreProxy.Common
     public delegate void OnException(string msg, SocketUnit socketUnit);
 
 
+    /// <summary>
+    /// 数据帧
+    ///【4字节payload长度】【payload】
+    /// </summary>
+    public class DataFrame
+    {
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public byte[] Payload { get; set; }
+
+        public string BrowserId  { get; set; }
+
+
+        /// <summary>
+        /// 帧形成字节数组
+        /// </summary>
+        /// <param name="dataFrame"></param>
+        /// <returns></returns>
+        public static byte[] MakeBytes(DataFrame dataFrame)
+        {
+            var str = Newtonsoft.Json.JsonConvert.SerializeObject(dataFrame);
+            var jsonData = Encoding.UTF8.GetBytes(str);
+
+            //返回长度的小端字节表示   4字节
+            byte[] head = BitConverter.GetBytes(jsonData.Length);
+
+            return Utility.MergeBytes(head, jsonData);
+        }
+
+
+
+        /// <summary>
+        /// 解析数据 形成帧
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static (DataFrame frame, int frameLenth) ParseBytes(byte[] data)
+        {
+            try
+            {
+                //取出头部4字节的长度
+                var lenth = BitConverter.ToInt32(data.Take(4).ToArray());
+
+                var jsonBytes = data.Skip(4).Take(lenth).ToArray();
+                var jsonStr = System.Text.Encoding.UTF8.GetString(jsonBytes);
+
+                var result = Newtonsoft.Json.JsonConvert.DeserializeObject<DataFrame>(jsonStr);
+                return (result, 4 + lenth);
+            }
+            catch(Exception ex)
+            {
+                return (null, 0);
+            }
+        }
+    }
+
+
     public class SocketUnit
     {
         public Socket Socket { get; set; } = null;
 
 
-        public SocketUnit(Socket socket)
+        public SocketUnit(Socket s)
         {
-            Socket = socket;
+            Socket = s ?? throw new Exception("SocketUnit socket为空");
+
             Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.NoDelay, true);
         }
 
@@ -28,9 +87,9 @@ namespace CoreProxy.Common
         /// <param name="address"></param>
         /// <param name="port"></param>
         /// <returns></returns>
-        public async Task ConnectAsync(string address, int port)
+        public Task ConnectAsync(string address, int port)
         {
-            await Socket.ConnectAsync(address, port);
+            return Socket.ConnectAsync(address, port);
         }
 
 
@@ -39,29 +98,9 @@ namespace CoreProxy.Common
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task SendAsync(byte[] data)
+        public Task<int> SendAsync(byte[] data)
         {
-            await Socket.SendAsync(data, SocketFlags.None);
-        }
-
-
-        /// <summary>
-        /// 发送 （lenth + payload）
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <param name="data">数据</param>
-        /// <returns></returns>
-        public async Task SendWithLenthAsync(byte[] data)
-        {
-            //返回长度的小端字节表示   4字节
-            byte[] head = BitConverter.GetBytes(data.Length);
-            byte[] sendData = new byte[head.Length + data.Length];
-
-            int lenth = BitConverter.ToInt32(head);
-            Array.Copy(head, 0, sendData, 0, head.Length);
-            Array.Copy(data, 0, sendData, head.Length, data.Length);
-
-            await Socket.SendAsync(sendData, SocketFlags.None);
+            return Socket.SendAsync(data, SocketFlags.None);
         }
 
         byte[] buff = new byte[8192];
@@ -71,99 +110,82 @@ namespace CoreProxy.Common
         /// </summary>
         public async Task<byte[]> ReceiveAsync()
         {
-           
             int lenth = await Socket.ReceiveAsync(buff, SocketFlags.None);
-            if (lenth > 0)
+            //Console.WriteLine("lenth " + lenth);
+            if(lenth == 0)
             {
-                byte[] result = new byte[lenth];
-                Array.Copy(buff, 0, result, 0, lenth);
-                return result;
+                throw new Exception("接收==0");
             }
-            return null;
+            byte[] result = new byte[lenth];
+            Array.Copy(buff, 0, result, 0, lenth);
+            return result;
         }
 
 
-
-        /// 解析出一帧的长度
+        /// <summary>
+        /// 发送数据帧 （lenth + payload）
         /// </summary>
-        private int FrameLenth = 0;
-
-
-
-        private void EnQueue(byte[] vs)
+        /// <param name="socket"></param>
+        /// <param name="data">数据</param>
+        /// <returns></returns>
+        public Task<int> SendFrameAsync(byte[] payload)
         {
-            foreach (var i in vs)
-            {
-                AllBytes.Enqueue(i);
-            }
+            var sendData = DataFrame.MakeBytes(new DataFrame { Payload = payload });
+            return Socket.SendAsync(sendData, SocketFlags.None);
         }
 
-        private byte[] DeQueue(int n)
-        {
-            if (AllBytes.Count >= n)
-            {
-                byte[] vs = new byte[n];
-                for (int i = 0; i < n; i++)
-                {
-                    vs[i] = AllBytes.Dequeue();
-                }
-                return vs;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        //每次接收的都追加到尾部
-        private Queue<byte> AllBytes = new Queue<byte>();
+        byte[] recvBuff = null;
 
         //处理帧
         public async Task<List<byte[]>> ReceiveFrameAsync()
         {
             List<byte[]> frames = new List<byte[]>();
-            
-            int lenth = await Socket.ReceiveAsync(buff, SocketFlags.None);
-            if (lenth > 0)
+
+            byte[] result = await this.ReceiveAsync();
+
+            //解密
+            //result = Crypto.DecryptAES(result);
+
+            if (recvBuff == null)
             {
-                byte[] result = new byte[lenth];
-                Array.Copy(buff, 0, result, 0, lenth);
-
-                //进队列
-                EnQueue(result);
-
-                while (AllBytes.Count > 0)
-                {
-                    //取出长度
-                    if (FrameLenth == 0)
-                    {
-                        byte[] fourBytes = DeQueue(4);
-                        if (fourBytes != null)
-                        {
-                            FrameLenth = BitConverter.ToInt32(fourBytes);
-                        }
-                    }
-
-                    //取出一帧数据
-                    byte[] frame = DeQueue(FrameLenth);
-                    if (frame != null)
-                    {
-                        FrameLenth = 0;
-                        //Console.WriteLine("处理一帧 " + frame.Length + "队列大小" + socketState.AllBytes.Count);
-                        //return frame;
-                        frames.Add(frame);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                recvBuff = result;
             }
             else
             {
-                throw new Exception("接收缓冲区为0");
+                //将接收到的数据放入缓冲区
+                recvBuff = Utility.MergeBytes(recvBuff, result);
             }
+
+
+            while (recvBuff.Length > 0)
+            {
+                var frame = DataFrame.ParseBytes(recvBuff);
+                if (frame.frame == null)
+                {
+                    break;
+                }
+                frames.Add(frame.frame.Payload);
+                recvBuff = Utility.RemoveNBytes(recvBuff, frame.frameLenth);
+            }
+
             return frames;
+        }
+
+
+        public void Close()
+        {
+            try
+            {
+                if (Socket != null)
+                {
+                    Socket.Close();
+                    //Socket.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine(DateTime.Now + " [Close] " + ex.Message);
+            }
         }
     }
 }
