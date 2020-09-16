@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "Microsoft.NETCore.Platforms/5.0.0-preview.8.20407.11": {
+      "Microsoft.NETCore.Platforms/5.0.0-rc.1.20451.14": {
         "type": "package",
         "compile": {
           "lib/netstandard1.0/_._": {}
@@ -11,11 +11,11 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Win32.Registry/5.0.0-preview.8.20407.11": {
+      "Microsoft.Win32.Registry/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "System.Security.AccessControl": "5.0.0-preview.8.20407.11",
-          "System.Security.Principal.Windows": "5.0.0-preview.8.20407.11"
+          "System.Security.AccessControl": "5.0.0-rc.1.20451.14",
+          "System.Security.Principal.Windows": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netstandard2.0/_._": {}
@@ -30,10 +30,10 @@
           }
         }
       },
-      "Microsoft.Win32.SystemEvents/5.0.0-preview.8.20407.11": {
+      "Microsoft.Win32.SystemEvents/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0-preview.8.20407.11"
+          "Microsoft.NETCore.Platforms": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netstandard2.0/_._": {}
@@ -57,11 +57,11 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
-      "System.Configuration.ConfigurationManager/5.0.0-preview.8.20407.11": {
+      "System.Configuration.ConfigurationManager/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "System.Security.Cryptography.ProtectedData": "5.0.0-preview.8.20407.11",
-          "System.Security.Permissions": "5.0.0-preview.8.20407.11"
+          "System.Security.Cryptography.ProtectedData": "5.0.0-rc.1.20451.14",
+          "System.Security.Permissions": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netstandard2.0/_._": {}
@@ -70,13 +70,13 @@
           "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {}
         }
       },
-      "System.Diagnostics.PerformanceCounter/5.0.0-preview.8.20407.11": {
+      "System.Diagnostics.PerformanceCounter/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0-preview.8.20407.11",
-          "Microsoft.Win32.Registry": "5.0.0-preview.8.20407.11",
-          "System.Configuration.ConfigurationManager": "5.0.0-preview.8.20407.11",
-          "System.Security.Principal.Windows": "5.0.0-preview.8.20407.11"
+          "Microsoft.NETCore.Platforms": "5.0.0-rc.1.20451.14",
+          "Microsoft.Win32.Registry": "5.0.0-rc.1.20451.14",
+          "System.Configuration.ConfigurationManager": "5.0.0-rc.1.20451.14",
+          "System.Security.Principal.Windows": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.dll": {}
@@ -91,17 +91,16 @@
           }
         }
       },
-      "System.Drawing.Common/5.0.0-preview.8.20407.11": {
+      "System.Drawing.Common/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0-preview.8.20407.11",
-          "Microsoft.Win32.SystemEvents": "5.0.0-preview.8.20407.11"
+          "Microsoft.Win32.SystemEvents": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netcoreapp3.0/_._": {}
         },
         "runtime": {
-          "lib/netstandard2.0/System.Drawing.Common.dll": {}
+          "lib/netcoreapp3.0/System.Drawing.Common.dll": {}
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll": {
@@ -114,7 +113,7 @@
           }
         }
       },
-      "System.IO.Pipelines/5.0.0-preview.8.20407.11": {
+      "System.IO.Pipelines/5.0.0-rc.1.20451.14": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.0/System.IO.Pipelines.dll": {}
@@ -135,11 +134,11 @@
           "buildTransitive/netcoreapp3.0/System.Reactive.targets": {}
         }
       },
-      "System.Security.AccessControl/5.0.0-preview.8.20407.11": {
+      "System.Security.AccessControl/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "5.0.0-preview.8.20407.11",
-          "System.Security.Principal.Windows": "5.0.0-preview.8.20407.11"
+          "Microsoft.NETCore.Platforms": "5.0.0-rc.1.20451.14",
+          "System.Security.Principal.Windows": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netstandard2.0/_._": {}
@@ -154,7 +153,7 @@
           }
         }
       },
-      "System.Security.Cryptography.ProtectedData/5.0.0-preview.8.20407.11": {
+      "System.Security.Cryptography.ProtectedData/5.0.0-rc.1.20451.14": {
         "type": "package",
         "compile": {
           "ref/netstandard2.0/_._": {}
@@ -169,11 +168,11 @@
           }
         }
       },
-      "System.Security.Permissions/5.0.0-preview.8.20407.11": {
+      "System.Security.Permissions/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "System.Security.AccessControl": "5.0.0-preview.8.20407.11",
-          "System.Windows.Extensions": "5.0.0-preview.8.20407.11"
+          "System.Security.AccessControl": "5.0.0-rc.1.20451.14",
+          "System.Windows.Extensions": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/net5.0/_._": {}
@@ -182,7 +181,7 @@
           "lib/net5.0/System.Security.Permissions.dll": {}
         }
       },
-      "System.Security.Principal.Windows/5.0.0-preview.8.20407.11": {
+      "System.Security.Principal.Windows/5.0.0-rc.1.20451.14": {
         "type": "package",
         "compile": {
           "ref/netcoreapp3.0/_._": {}
@@ -201,10 +200,10 @@
           }
         }
       },
-      "System.Windows.Extensions/5.0.0-preview.8.20407.11": {
+      "System.Windows.Extensions/5.0.0-rc.1.20451.14": {
         "type": "package",
         "dependencies": {
-          "System.Drawing.Common": "5.0.0-preview.8.20407.11"
+          "System.Drawing.Common": "5.0.0-rc.1.20451.14"
         },
         "compile": {
           "ref/netcoreapp3.0/_._": {}
@@ -222,10 +221,10 @@
     }
   },
   "libraries": {
-    "Microsoft.NETCore.Platforms/5.0.0-preview.8.20407.11": {
-      "sha512": "r1yAhsxC6fvVkOwikgfC3T5m+kRjXbfLsHd8+p1EE9JTUqOkZPm3lzco2naZqMseBI8v/Ws0M/tGfBTe5Dj0ZQ==",
+    "Microsoft.NETCore.Platforms/5.0.0-rc.1.20451.14": {
+      "sha512": "Jc+RnnjaMdpJ2sdm9v0ATyGVd3MBNDlAuu/yFz51gYpZhK3fHQiGHqgUinvtoD8dK5FSjSyn9lSYPPdwRg4D+w==",
       "type": "package",
-      "path": "microsoft.netcore.platforms/5.0.0-preview.8.20407.11",
+      "path": "microsoft.netcore.platforms/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -233,17 +232,17 @@
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/netstandard1.0/_._",
-        "microsoft.netcore.platforms.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "microsoft.netcore.platforms.5.0.0-rc.1.20451.14.nupkg.sha512",
         "microsoft.netcore.platforms.nuspec",
         "runtime.json",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "Microsoft.Win32.Registry/5.0.0-preview.8.20407.11": {
-      "sha512": "ukG241E1yrEWoePOjDu/Fj9lSS0DO/Fs2HlD0JGZl7csVKBNk2AdPYvlsoRW8ZgzMYRCWDnQ9/3w1/CiWdp8xA==",
+    "Microsoft.Win32.Registry/5.0.0-rc.1.20451.14": {
+      "sha512": "cl9F5BNOoALFkzeXbPgO4EKNl7Jfo15/Nm34qJxofyoHMyDNdYo98Wanvd+qPNXXd1z+9KCX3faOSOr2Bf6DkA==",
       "type": "package",
-      "path": "microsoft.win32.registry/5.0.0-preview.8.20407.11",
+      "path": "microsoft.win32.registry/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -256,13 +255,11 @@
         "lib/netstandard1.3/Microsoft.Win32.Registry.dll",
         "lib/netstandard2.0/Microsoft.Win32.Registry.dll",
         "lib/netstandard2.0/Microsoft.Win32.Registry.xml",
-        "microsoft.win32.registry.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "microsoft.win32.registry.5.0.0-rc.1.20451.14.nupkg.sha512",
         "microsoft.win32.registry.nuspec",
         "ref/net46/Microsoft.Win32.Registry.dll",
         "ref/net461/Microsoft.Win32.Registry.dll",
         "ref/net461/Microsoft.Win32.Registry.xml",
-        "ref/net472/Microsoft.Win32.Registry.dll",
-        "ref/net472/Microsoft.Win32.Registry.xml",
         "ref/netstandard1.3/Microsoft.Win32.Registry.dll",
         "ref/netstandard1.3/Microsoft.Win32.Registry.xml",
         "ref/netstandard1.3/de/Microsoft.Win32.Registry.xml",
@@ -286,10 +283,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.Win32.SystemEvents/5.0.0-preview.8.20407.11": {
-      "sha512": "TLcacbHCpoXrwtsS6ZbAd3Ockh628bGoXujs4I//QSmN5t+uCfb8v3TrbmDmnRtE6G9dHQu1Iih3HGW53J1noA==",
+    "Microsoft.Win32.SystemEvents/5.0.0-rc.1.20451.14": {
+      "sha512": "ozN3V5qqn8JnPpBVKZE/iuU6aCPC69m0ZLxGYjiAPnP2DGW4srHeF6lz3Myb1Jpy1qVBYRAsveureHntIwA52A==",
       "type": "package",
-      "path": "microsoft.win32.systemevents/5.0.0-preview.8.20407.11",
+      "path": "microsoft.win32.systemevents/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -300,12 +297,10 @@
         "lib/net461/Microsoft.Win32.SystemEvents.xml",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
-        "microsoft.win32.systemevents.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "microsoft.win32.systemevents.5.0.0-rc.1.20451.14.nupkg.sha512",
         "microsoft.win32.systemevents.nuspec",
         "ref/net461/Microsoft.Win32.SystemEvents.dll",
         "ref/net461/Microsoft.Win32.SystemEvents.xml",
-        "ref/net472/Microsoft.Win32.SystemEvents.dll",
-        "ref/net472/Microsoft.Win32.SystemEvents.xml",
         "ref/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
         "ref/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
         "runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.dll",
@@ -347,10 +342,10 @@
         "packageIcon.png"
       ]
     },
-    "System.Configuration.ConfigurationManager/5.0.0-preview.8.20407.11": {
-      "sha512": "VpHX7DmSuOOPHYJyblFV/PLNVKY7fP4c8/7TUKsSeYQTtk2EFmaXX0Y5twg7V11Kzlp9Zwp228VyuuU0jStKCA==",
+    "System.Configuration.ConfigurationManager/5.0.0-rc.1.20451.14": {
+      "sha512": "nAIUY5GD88klp6MvzV9XcxzwvPVc4Sngh3N7iXwKlIH8a8WtbxvwXeTaAm8R0be9Mq4PHaZxLEheSkwx2as8rA==",
       "type": "package",
-      "path": "system.configuration.configurationmanager/5.0.0-preview.8.20407.11",
+      "path": "system.configuration.configurationmanager/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -365,16 +360,16 @@
         "ref/net461/System.Configuration.ConfigurationManager.xml",
         "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll",
         "ref/netstandard2.0/System.Configuration.ConfigurationManager.xml",
-        "system.configuration.configurationmanager.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.configuration.configurationmanager.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.configuration.configurationmanager.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Diagnostics.PerformanceCounter/5.0.0-preview.8.20407.11": {
-      "sha512": "g8XDnTX0QAjN5TWkq6wDwHf38h7qqCF+wD7lgUkzm0x0+ANjj6Lid27mRWqkWFTMa9YWhnEKCGWlBnfnPF4+zw==",
+    "System.Diagnostics.PerformanceCounter/5.0.0-rc.1.20451.14": {
+      "sha512": "IvxjJNlVv5Lwwk6A4l2r49lE99LwJtGPbq/AVWLYTxSH2bam+sAxltA2e1Wj+lYrTCimAP1lNpqSn4HILkyo2A==",
       "type": "package",
-      "path": "system.diagnostics.performancecounter/5.0.0-preview.8.20407.11",
+      "path": "system.diagnostics.performancecounter/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -395,8 +390,6 @@
         "ref/MonoTouch10/_._",
         "ref/net461/System.Diagnostics.PerformanceCounter.dll",
         "ref/net461/System.Diagnostics.PerformanceCounter.xml",
-        "ref/net472/System.Diagnostics.PerformanceCounter.dll",
-        "ref/net472/System.Diagnostics.PerformanceCounter.xml",
         "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.dll",
         "ref/netstandard2.0/System.Diagnostics.PerformanceCounter.xml",
         "ref/xamarinios10/_._",
@@ -405,16 +398,16 @@
         "ref/xamarinwatchos10/_._",
         "runtimes/win/lib/netcoreapp2.0/System.Diagnostics.PerformanceCounter.dll",
         "runtimes/win/lib/netcoreapp2.0/System.Diagnostics.PerformanceCounter.xml",
-        "system.diagnostics.performancecounter.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.diagnostics.performancecounter.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.diagnostics.performancecounter.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Drawing.Common/5.0.0-preview.8.20407.11": {
-      "sha512": "UO+cpFEnXyUSupwz/XwtWLzt+38mYZG6xf/0qbxpDzZKG9TmzG0SDy4NGXZpNtov2cUIUDSWwaRG/mnAcgYyUg==",
+    "System.Drawing.Common/5.0.0-rc.1.20451.14": {
+      "sha512": "Qnc+QLskNSwqEo/WnOaC3lZV6FE3CDYLMzrKZ9gUQxzDXG/LL7gXYT6f7dB+Su5MAMpZub4aasetFNFs3ZpODw==",
       "type": "package",
-      "path": "system.drawing.common/5.0.0-preview.8.20407.11",
+      "path": "system.drawing.common/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -424,6 +417,8 @@
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
         "lib/net461/System.Drawing.Common.dll",
+        "lib/netcoreapp3.0/System.Drawing.Common.dll",
+        "lib/netcoreapp3.0/System.Drawing.Common.xml",
         "lib/netstandard2.0/System.Drawing.Common.dll",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
@@ -445,16 +440,16 @@
         "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll",
         "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll",
         "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.xml",
-        "system.drawing.common.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.drawing.common.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.IO.Pipelines/5.0.0-preview.8.20407.11": {
-      "sha512": "9Iuq2h+5/TxYDody4eipFc9ONkAGaeU7t9qQQjrOCWnti9qJKHvqnl+8BlzS2pt38K+ZOJYTycjSSVyAXyDdoA==",
+    "System.IO.Pipelines/5.0.0-rc.1.20451.14": {
+      "sha512": "V4t8Egp7uZqB1I4oqmXPa1acq61tFMh3N7GxZ/Zla3JJXVkGtOlzdbRuOX6I+FDG8yb+ieOUcET8IYzpUxI3tQ==",
       "type": "package",
-      "path": "system.io.pipelines/5.0.0-preview.8.20407.11",
+      "path": "system.io.pipelines/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -470,7 +465,7 @@
         "lib/netstandard2.0/System.IO.Pipelines.dll",
         "lib/netstandard2.0/System.IO.Pipelines.xml",
         "ref/netcoreapp2.0/System.IO.Pipelines.dll",
-        "system.io.pipelines.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.io.pipelines.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.io.pipelines.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -502,10 +497,10 @@
         "system.reactive.nuspec"
       ]
     },
-    "System.Security.AccessControl/5.0.0-preview.8.20407.11": {
-      "sha512": "E7EHTC05uKfDBUGSD6lju1TkEiSJ94ip20V0uOZ36Fcc+dtJsUl8DaxraSIbj06taKCfXdAbh0Z+F1ojhh4EmQ==",
+    "System.Security.AccessControl/5.0.0-rc.1.20451.14": {
+      "sha512": "KASnTPCSj0ERn3R0jM6aOAI2a5KdpqEoQm0cwwTFyeyGvfBjFMl2MEJn5qMduXCmTeKeBBojjV0PAw5aRlw9vg==",
       "type": "package",
-      "path": "system.security.accesscontrol/5.0.0-preview.8.20407.11",
+      "path": "system.security.accesscontrol/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -543,16 +538,16 @@
         "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.xml",
         "runtimes/win/lib/netstandard1.3/System.Security.AccessControl.dll",
         "runtimes/win/lib/uap10.0.16299/_._",
-        "system.security.accesscontrol.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.security.accesscontrol.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.security.accesscontrol.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Security.Cryptography.ProtectedData/5.0.0-preview.8.20407.11": {
-      "sha512": "jG4EnzLJacUx6kDFRcLyj3vNs2CByl5tiWs4gRWw8O8MgnpXuw9dX4i4gzrGOtwT1vzpJ5PFJrmc9XEAljW/Ag==",
+    "System.Security.Cryptography.ProtectedData/5.0.0-rc.1.20451.14": {
+      "sha512": "wz5ayM/IIV2prpiuRB3EX/rs8XknCNRjtzBEt63mYJDcvQNCcnUa4mNEmdFNDbYuTdi77tR4f+OFTHCGtS/1NQ==",
       "type": "package",
-      "path": "system.security.cryptography.protecteddata/5.0.0-preview.8.20407.11",
+      "path": "system.security.cryptography.protecteddata/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -589,16 +584,16 @@
         "runtimes/win/lib/netstandard1.3/System.Security.Cryptography.ProtectedData.dll",
         "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll",
         "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.xml",
-        "system.security.cryptography.protecteddata.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.security.cryptography.protecteddata.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.security.cryptography.protecteddata.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Security.Permissions/5.0.0-preview.8.20407.11": {
-      "sha512": "+/kewi7BOrbO53JqRYjT8in35QhunSZI0XI9dk8BFJ3987L4fPZUeetxR+SbG9bTH7QddIDsqBoMqgzrrRRatw==",
+    "System.Security.Permissions/5.0.0-rc.1.20451.14": {
+      "sha512": "Mqaj2cSJ8B47ACdsnHCB8lNHi1+3sP64YZIJtC1DiEHLTmryyVfUMHUkEECZmCKvky6CHp8vSoTmPIW8BAoBrw==",
       "type": "package",
-      "path": "system.security.permissions/5.0.0-preview.8.20407.11",
+      "path": "system.security.permissions/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -621,16 +616,16 @@
         "ref/netcoreapp3.0/System.Security.Permissions.xml",
         "ref/netstandard2.0/System.Security.Permissions.dll",
         "ref/netstandard2.0/System.Security.Permissions.xml",
-        "system.security.permissions.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.security.permissions.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.security.permissions.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Security.Principal.Windows/5.0.0-preview.8.20407.11": {
-      "sha512": "eVmqFJQpa5xuU3jUuh4WG46a7gMU6Oz7HKfivb2uGf+H2Oi8GgjKF+97rxOjblvAPDPvL43iMcOPQ42a1U+YLg==",
+    "System.Security.Principal.Windows/5.0.0-rc.1.20451.14": {
+      "sha512": "LFSK8Powxb2CuNRCZETvcPKOys/oedQhxocqN26/B7sJODv/pMH5JfFC1Txq5+mMSGvUfXvp+U5/loO5NIy10w==",
       "type": "package",
-      "path": "system.security.principal.windows/5.0.0-preview.8.20407.11",
+      "path": "system.security.principal.windows/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -676,16 +671,16 @@
         "runtimes/win/lib/netcoreapp2.1/System.Security.Principal.Windows.xml",
         "runtimes/win/lib/netstandard1.3/System.Security.Principal.Windows.dll",
         "runtimes/win/lib/uap10.0.16299/_._",
-        "system.security.principal.windows.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.security.principal.windows.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.security.principal.windows.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
     },
-    "System.Windows.Extensions/5.0.0-preview.8.20407.11": {
-      "sha512": "qIsD+tZsmOOTPz33fQWWDpLN33v7QJ/+3aFAvFoUk2gCiKZdh4T8fQLAYx8S4Kws0KCbNGKg9uIo8foWf24Tgw==",
+    "System.Windows.Extensions/5.0.0-rc.1.20451.14": {
+      "sha512": "96Wa7VzWWmiic6KwXVlKvLY678N9Nooa4OMQgfO7D4rfPCdP+Rr5hcHNhAWUhY/4RQbWAXiG2xDwU4OC3nqMxg==",
       "type": "package",
-      "path": "system.windows.extensions/5.0.0-preview.8.20407.11",
+      "path": "system.windows.extensions/5.0.0-rc.1.20451.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -698,7 +693,7 @@
         "ref/netcoreapp3.0/System.Windows.Extensions.xml",
         "runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll",
         "runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.xml",
-        "system.windows.extensions.5.0.0-preview.8.20407.11.nupkg.sha512",
+        "system.windows.extensions.5.0.0-rc.1.20451.14.nupkg.sha512",
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -708,8 +703,8 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Newtonsoft.Json >= 12.0.3",
-      "System.Diagnostics.PerformanceCounter >= 5.0.0-preview.8.20407.11",
-      "System.IO.Pipelines >= 5.0.0-preview.8.20407.11",
+      "System.Diagnostics.PerformanceCounter >= 5.0.0-rc.1.20451.14",
+      "System.IO.Pipelines >= 5.0.0-rc.1.20451.14",
       "System.Reactive >= 4.4.1"
     ]
   },
@@ -758,11 +753,11 @@
           },
           "System.Diagnostics.PerformanceCounter": {
             "target": "Package",
-            "version": "[5.0.0-preview.8.20407.11, )"
+            "version": "[5.0.0-rc.1.20451.14, )"
           },
           "System.IO.Pipelines": {
             "target": "Package",
-            "version": "[5.0.0-preview.8.20407.11, )"
+            "version": "[5.0.0-rc.1.20451.14, )"
           },
           "System.Reactive": {
             "target": "Package",
@@ -787,7 +782,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.8.20417.9\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-rc.1.20452.10\\RuntimeIdentifierGraph.json"
       }
     }
   }

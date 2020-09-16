@@ -7,6 +7,7 @@ using System.Buffers;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
+using System.Net.Connections;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -75,10 +76,10 @@ namespace CoreProxy
 
         }
 
-        IConnectionFactory connectionFactory;
+        SocketsConnectionFactory connectionFactory;
 
         public async Task StartAsync(IConnectionListenerFactory listenerFactory,
-                                    IConnectionFactory connectionFactory,
+                                    SocketsConnectionFactory connectionFactory,
                                      //string remoteAddress,
                                      // int remotePort,
                                      int localListenPort)
@@ -104,12 +105,12 @@ namespace CoreProxy
         {
             Task.Factory.StartNew(async () =>
             {
-                ConnectionContext target = null;
+                Connection target = null;
                 try
                 {
-                    //target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("23.95.20.144"), 2019));
+                    target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("23.95.20.144"), 2019));
 #if DEBUG
-                     target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2019));
+                    // target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2019));
 
 #else
                     target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("23.95.20.144"), 2019));
@@ -121,33 +122,30 @@ namespace CoreProxy
                         //浏览器普通接收
                         var result = await browser.Transport.Input.ReadAsync();
 
-                        if (result.IsCompleted)
+                        if (result.IsCompleted || result.IsCanceled)
                         {
                             break;
                         }
 
-
                         var buff = result.Buffer;
-                        var data = buff.ToArray();
 
 
                         // 接收到浏览器数据
-                        if (buff.Length == 3 && string.Join(",", data) == "5,1,0")
+                        if (buff.Length == 3 && string.Join(",", buff.ToArray()) == "5,1,0")
                         {
                             //发5 0 回到浏览器
                             await browser.Transport.Output.WriteAsync(new byte[] { 5, 0 });
                         }
                         else
                         {
-                            var pack = Message.MakePack(new Message { Content = Crypto.EncryptAES(data) });
+                            var pack = Message.MakePack(new Message { Content = Crypto.EncryptAES(buff.ToArray()) });
 
 
                             //发送数据到服务器
-                            await target.Transport.Output.WriteAsync(pack);
+                            await target.Pipe.Output.WriteAsync(pack);
                         }
 
-                        browser.Transport.Input.AdvanceTo(buff.GetPosition(data.Length));
-
+                        browser.Transport.Input.AdvanceTo(buff.GetPosition(buff.Length));
                     }
 
                     await browser.Transport.Input.CompleteAsync();
@@ -156,21 +154,11 @@ namespace CoreProxy
                 {
                     Console.WriteLine(ex.Message);
                 }
-
-                if (target != null)
-                {
-                    //await target.DisposeAsync();
-                }
-                if (browser != null)
-                {
-                    //await browser.DisposeAsync();
-                }
-
             });
         }
 
         //处理目标服务器
-        void ProcessTaget(ConnectionContext browser, ConnectionContext target)
+        void ProcessTaget(ConnectionContext browser, Connection target)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -178,36 +166,28 @@ namespace CoreProxy
                 {
                     while (true)
                     {
-                        ReadResult result = await target.Transport.Input.ReadAsync();
-                        //Console.WriteLine(result.Buffer.Length);
+                       
+                        ReadResult result = await target.Pipe.Input.ReadAsync();
+                        if (result.IsCompleted || result.IsCanceled)
+                        {
+                            break;
+                        }
+                     
                         if (result.Buffer.Length > 0)
                         {
                             //Console.WriteLine($"sslocal 收到服务器{result.Buffer.Length}字节");
                             //发往浏览器
                             await browser.Transport.Output.WriteAsync(result.Buffer.ToArray());
-                        }
-                        target.Transport.Input.AdvanceTo(result.Buffer.GetPosition(result.Buffer.Length));
-                        if (result.IsCompleted)
-                        {
-                            break;
+
+                            target.Pipe.Input.AdvanceTo(result.Buffer.GetPosition(result.Buffer.Length));
                         }
                     }
 
-                    await target.Transport.Input.CompleteAsync();
-
+                    await target.Pipe.Input.CompleteAsync();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                }
-
-                if (target != null)
-                {
-                    //await target.DisposeAsync();
-                }
-                if (browser != null)
-                {
-                    //await browser.DisposeAsync();
                 }
             });
         }

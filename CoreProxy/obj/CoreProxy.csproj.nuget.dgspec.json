@@ -46,11 +46,11 @@
             },
             "System.Diagnostics.PerformanceCounter": {
               "target": "Package",
-              "version": "[5.0.0-preview.8.20407.11, )"
+              "version": "[5.0.0-rc.1.20451.14, )"
             },
             "System.IO.Pipelines": {
               "target": "Package",
-              "version": "[5.0.0-preview.8.20407.11, )"
+              "version": "[5.0.0-rc.1.20451.14, )"
             },
             "System.Reactive": {
               "target": "Package",
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-preview.8.20417.9\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100-rc.1.20452.10\\RuntimeIdentifierGraph.json"
         }
       }
     }

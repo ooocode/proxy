@@ -15,14 +15,18 @@ namespace CoreProxy
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConnectionFactory, SocketConnectionFactory>();
+           
         }
+
+        System.Net.Connections.SocketsConnectionFactory connectionFactory =
+            new System.Net.Connections.SocketsConnectionFactory(System.Net.Sockets.AddressFamily.InterNetwork , System.Net.Sockets.SocketType.Stream,
+            System.Net.Sockets.ProtocolType.Tcp);
 
         public void Configure(IApplicationBuilder app)
         {
             var listenerFactory = app.ApplicationServices.GetRequiredService<IConnectionListenerFactory>();
-            IConnectionFactory connectionFactory = app.ApplicationServices.GetRequiredService<IConnectionFactory>();
-
+            // IConnectionFactory connectionFactory = app.ApplicationServices.GetRequiredService<IConnectionFactory>();
+        
             Task.Run(async () =>
             { 
                 Local local = new Local();
