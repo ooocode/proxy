@@ -9,7 +9,6 @@ using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
 using System.Net.Connections;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace CoreProxy

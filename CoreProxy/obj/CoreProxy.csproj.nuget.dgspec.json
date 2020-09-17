@@ -1,32 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj": {}
+    "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {}
   },
   "projects": {
-    "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj": {
+    "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj",
+        "projectUniqueName": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
         "projectName": "CoreProxy",
-        "projectPath": "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj",
-        "packagesPath": "C:\\Users\\XingLucifer\\.nuget\\packages\\",
-        "outputPath": "E:\\0\\proxy\\CoreProxy\\obj\\",
+        "projectPath": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
+        "packagesPath": "C:\\Users\\94386\\.nuget\\packages\\",
+        "outputPath": "F:\\SS\\CoreProxy\\CoreProxy\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\XingLucifer\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
+          "C:\\Users\\94386\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\Microsoft SDKs\\Service Fabric\\packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -56,10 +51,6 @@
             "System.IO.Pipelines": {
               "target": "Package",
               "version": "[5.0.0-rc.1.20451.14, )"
-            },
-            "System.Reactive": {
-              "target": "Package",
-              "version": "[4.4.1, )"
             }
           },
           "imports": [
