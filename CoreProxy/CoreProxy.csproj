@@ -6,6 +6,7 @@
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <UpgradeBackupLocation>F:\SS\CoreProxy\Backup\CoreProxy\</UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\global.txt" />
@@ -23,9 +24,6 @@
     </Protobuf>
   </ItemGroup>
   <ItemGroup>
-    <None Update="config.conf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="global">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

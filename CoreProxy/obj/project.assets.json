@@ -709,26 +709,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\94386\\.nuget\\packages\\": {}
+    "C:\\Users\\XingLucifer\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
+      "projectUniqueName": "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj",
       "projectName": "CoreProxy",
-      "projectPath": "F:\\SS\\CoreProxy\\CoreProxy\\CoreProxy.csproj",
-      "packagesPath": "C:\\Users\\94386\\.nuget\\packages\\",
-      "outputPath": "F:\\SS\\CoreProxy\\CoreProxy\\obj\\",
+      "projectPath": "E:\\0\\proxy\\CoreProxy\\CoreProxy.csproj",
+      "packagesPath": "C:\\Users\\XingLucifer\\.nuget\\packages\\",
+      "outputPath": "E:\\0\\proxy\\CoreProxy\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\94386\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\XingLucifer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\ServiceFabricSDK.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\Microsoft SDKs\\Service Fabric\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

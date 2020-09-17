@@ -1,6 +1,7 @@
 ﻿using CoreProxy.Common;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Buffers;
@@ -13,12 +14,6 @@ using System.Threading.Tasks;
 
 namespace CoreProxy
 {
-    public class Options : IOptions<SocketTransportOptions>
-    {
-        public SocketTransportOptions Value => new SocketTransportOptions { NoDelay = true };
-    }
-
-
     //local端处理
     public class Message
     {
@@ -59,40 +54,44 @@ namespace CoreProxy
 
     public class Local
     {
-        public static IPEndPoint GetIpEndPoint(string address, int port)
-        {
-            DnsEndPoint dns = new DnsEndPoint(address, port);
-            var ipadress = Dns.GetHostEntry(address)?.AddressList.ElementAtOrDefault(0);
-            if (ipadress != null)
-            {
-                return new IPEndPoint(ipadress, port);
-            }
-            return null;
-        }
-
-
         public Local()
         {
 
         }
 
         SocketsConnectionFactory connectionFactory;
+        private string remoteAddress;
+        private int remotePort;
+        private ILogger<Local> logger;
 
-        public async Task StartAsync(IConnectionListenerFactory listenerFactory,
+        public async Task StartAsync(ILogger<Local> logger,
+            IConnectionListenerFactory listenerFactory,
                                     SocketsConnectionFactory connectionFactory,
-                                     //string remoteAddress,
-                                     // int remotePort,
-                                     int localListenPort)
+                                     string localListenAddress,
+                                     int localListenPort,
+                                     string remoteAddress,
+                                     int remotePort)
         {
-            var bind = await listenerFactory.BindAsync(new IPEndPoint(IPAddress.Loopback, localListenPort));
-            Console.WriteLine($"客户端正在监听{localListenPort}端口");
 
+            this.logger = logger;
             this.connectionFactory = connectionFactory;
+            this.remoteAddress = remoteAddress;
+            this.remotePort = remotePort;
 
-            while (true)
+            try
             {
-                ConnectionContext browser = await bind.AcceptAsync();
-                TcpHandlerAsync(browser);
+                var bind = await listenerFactory.BindAsync(new IPEndPoint(IPAddress.Parse(localListenAddress), localListenPort));
+                logger.LogInformation($"客户端正在监听{localListenPort}端口");
+
+                while (true)
+                {
+                    ConnectionContext browser = await bind.AcceptAsync();
+                    TcpHandlerAsync(browser);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical(ex.Message);
             }
         }
 
@@ -103,18 +102,12 @@ namespace CoreProxy
         /// <param name="client"></param>
         private void TcpHandlerAsync(ConnectionContext browser)
         {
-            Task.Factory.StartNew(async () =>
+            Task.Run(async () =>
             {
                 Connection target = null;
                 try
                 {
-                    target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("23.95.20.144"), 2019));
-#if DEBUG
-                    // target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2019));
-
-#else
-                    target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse("23.95.20.144"), 2019));
-#endif
+                    target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse(remoteAddress), remotePort));
 
                     ProcessTaget(browser, target);
                     while (true)
@@ -152,30 +145,29 @@ namespace CoreProxy
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    logger.LogError(ex.Message);
                 }
             });
         }
 
         //处理目标服务器
-        void ProcessTaget(ConnectionContext browser, Connection target)
+        private Task ProcessTaget(ConnectionContext browser, Connection target)
         {
-            Task.Factory.StartNew(async () =>
+            return Task.Run(async () =>
             {
                 try
                 {
                     while (true)
                     {
-                       
+
                         ReadResult result = await target.Pipe.Input.ReadAsync();
                         if (result.IsCompleted || result.IsCanceled)
                         {
                             break;
                         }
-                     
+
                         if (result.Buffer.Length > 0)
                         {
-                            //Console.WriteLine($"sslocal 收到服务器{result.Buffer.Length}字节");
                             //发往浏览器
                             await browser.Transport.Output.WriteAsync(result.Buffer.ToArray());
 
@@ -187,7 +179,7 @@ namespace CoreProxy
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    logger.LogError(ex.Message);
                 }
             });
         }
