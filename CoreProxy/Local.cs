@@ -1,21 +1,20 @@
 ﻿using CoreProxy.Common;
 using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Buffers;
-using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
-using System.Net.Connections;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace CoreProxy
 {
+
     //local端处理
     public class Message
     {
+        
         public byte[] Content { get; set; }
 
 
@@ -58,14 +57,12 @@ namespace CoreProxy
 
         }
 
-        SocketsConnectionFactory connectionFactory;
         private string remoteAddress;
         private int remotePort;
         private ILogger<Local> logger;
 
         public async Task StartAsync(ILogger<Local> logger,
             IConnectionListenerFactory listenerFactory,
-                                    SocketsConnectionFactory connectionFactory,
                                      string localListenAddress,
                                      int localListenPort,
                                      string remoteAddress,
@@ -73,7 +70,6 @@ namespace CoreProxy
         {
 
             this.logger = logger;
-            this.connectionFactory = connectionFactory;
             this.remoteAddress = remoteAddress;
             this.remotePort = remotePort;
 
@@ -103,10 +99,11 @@ namespace CoreProxy
         {
             Task.Run(async () =>
             {
-                Connection target = null;
+                TcpClient target = new TcpClient();
+                target.NoDelay = false;
                 try
                 {
-                    target = await connectionFactory.ConnectAsync(new IPEndPoint(IPAddress.Parse(remoteAddress), remotePort));
+                    await target.ConnectAsync(IPAddress.Parse(remoteAddress), remotePort);
 
                     ProcessTaget(browser, target);
                     while (true)
@@ -134,7 +131,8 @@ namespace CoreProxy
 
 
                             //发送数据到服务器
-                            await target.Pipe.Output.WriteAsync(pack);
+                            await target.Client.SendAsync(pack,SocketFlags.None);
+                            //await target.Pipe.Output.WriteAsync(pack);
                         }
 
                         browser.Transport.Input.AdvanceTo(buff.GetPosition(buff.Length));
@@ -150,7 +148,7 @@ namespace CoreProxy
         }
 
         //处理目标服务器
-        private Task ProcessTaget(ConnectionContext browser, Connection target)
+        private Task ProcessTaget(ConnectionContext browser, TcpClient target)
         {
             return Task.Run(async () =>
             {
@@ -158,28 +156,28 @@ namespace CoreProxy
                 {
                     while (true)
                     {
+                        byte[] buff = new byte[8192];
+                        var realLenth = await target.Client.ReceiveAsync(buff,SocketFlags.None);
 
-                        ReadResult result = await target.Pipe.Input.ReadAsync();
-                        if (result.IsCompleted || result.IsCanceled)
+                        if (realLenth == 0)
                         {
                             break;
                         }
-
-                        if (result.Buffer.Length > 0)
+                        else
                         {
+                            var result = new byte[realLenth];
+                            Array.Copy(buff, result, realLenth);
                             //发往浏览器
-                            await browser.Transport.Output.WriteAsync(result.Buffer.ToArray());
-
-                            target.Pipe.Input.AdvanceTo(result.Buffer.GetPosition(result.Buffer.Length));
+                            await browser.Transport.Output.WriteAsync(result);
                         }
                     }
-
-                    await target.Pipe.Input.CompleteAsync();
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex.Message);
                 }
+
+                target.Dispose();
             });
         }
     }

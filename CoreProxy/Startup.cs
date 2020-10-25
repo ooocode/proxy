@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Net.Sockets;
+
 
 namespace CoreProxy
 {
     public class Startup
     {
-
-        System.Net.Connections.SocketsConnectionFactory connectionFactory =
-            new System.Net.Connections.SocketsConnectionFactory(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream,
-            System.Net.Sockets.ProtocolType.Tcp);
-
         public IConfiguration Configuration { get; }
 
 
@@ -56,7 +47,7 @@ namespace CoreProxy
                 }
 
                 Local local = new Local();
-                await local.StartAsync(logger,listenerFactory, connectionFactory,localListenAddress, localPort,remoteAddress,remotePort);
+                await local.StartAsync(logger,listenerFactory,localListenAddress, localPort,remoteAddress,remotePort);
             });
 
             app.UseStaticFiles();

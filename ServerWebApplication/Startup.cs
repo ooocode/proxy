@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.Linq;
 using System.Net;
-using System.Net.Connections;
 using System.Threading.Tasks;
 using CoreProxy.Common;
 using DnsClient;
@@ -13,7 +12,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ServerWebApplication
+namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
+//namespace ServerWebApplication
 {
     public class Message
     {
@@ -91,8 +91,8 @@ namespace ServerWebApplication
 
         }
 
-        private static SocketsConnectionFactory ConnectFactory =
-    new SocketsConnectionFactory(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream,
+        private static IConnectionFactory ConnectFactory =
+    new SocketConnectionFactory(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream,
     System.Net.Sockets.ProtocolType.Tcp);
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
