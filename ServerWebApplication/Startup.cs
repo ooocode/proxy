@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using CoreProxy.Common;
 using DnsClient;
@@ -91,10 +92,6 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
 
         }
 
-        private static IConnectionFactory ConnectFactory =
-    new SocketConnectionFactory(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream,
-    System.Net.Sockets.ProtocolType.Tcp);
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -130,7 +127,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
             Task.Run(async () =>
             {
                 //最终网站
-                Connection target = null;
+                TcpClient target = new TcpClient();
                 try
                 {
                     while (true)
@@ -157,7 +154,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                                         break;
                                     }
 
-                                    target = await ConnectFactory.ConnectAsync(ipEndPoint);
+                                    await target.ConnectAsync(ipEndPoint.Address,ipEndPoint.Port);
 
                                     byte[] sendData = new byte[] { 0x05, 0x00, 0x00, 0x01, 0x7f, 0x00, 0x00, 0x01, 0x1f, 0x40 };
                                     //发送确认到浏览器
@@ -169,7 +166,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                                 else
                                 {
                                     //发送数据到目标服务器
-                                    await target.Pipe.Output.WriteAsync(data);
+                                    await target.Client.SendAsync(data,SocketFlags.None);
                                 }
 
                                 browser.Transport.Input.AdvanceTo(result.Buffer.GetPosition(message.Item2));
@@ -193,7 +190,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
         /// <summary>
         /// 监听网站目标服务器
         /// </summary>
-        public static void ProcessTargetServer(ConnectionContext browser, Connection target)
+        public static void ProcessTargetServer(ConnectionContext browser, TcpClient target)
         {
             Task.Run(async () =>
             {
@@ -201,21 +198,24 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                 {
                     while (true)
                     {
-                        System.IO.Pipelines.ReadResult result = await target.Pipe.Input.ReadAsync();
-                        if (result.IsCompleted || result.IsCanceled)
+                        byte[] buff = new byte[8192];
+                        var realLenth = await target.Client.ReceiveAsync(buff, SocketFlags.None);
+
+                        if (realLenth == 0)
                         {
                             break;
                         }
-
-                        if (result.Buffer.Length > 0)
+                        else
                         {
+                            var result = new byte[realLenth];
+                            Array.Copy(buff, result, realLenth);
+
                             //发往浏览器
-                            await browser.Transport.Output.WriteAsync(result.Buffer.ToArray());
-                            target.Pipe.Input.AdvanceTo(result.Buffer.GetPosition(result.Buffer.Length));
+                            await browser.Transport.Output.WriteAsync(result.ToArray());
                         }
                     }
 
-                    await target.Pipe.Input.CompleteAsync();
+                    target.Dispose();
                 }
                 catch (Exception ex)
                 {

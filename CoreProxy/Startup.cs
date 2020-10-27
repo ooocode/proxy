@@ -21,7 +21,7 @@ namespace CoreProxy
 
         public void ConfigureServices(IServiceCollection services)
         {
-        
+            
         }
 
 
