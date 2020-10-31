@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ServerWebApplication;
 
 namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
 //namespace ServerWebApplication
@@ -62,13 +63,15 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
 
         public static async Task<IPEndPoint> GetIpEndPointAsync(string address, int port)
         {
-           /* DnsEndPoint dns = new DnsEndPoint(address, port);
-            IPAddress ipadress = Dns.GetHostEntry(address)?.AddressList.ElementAtOrDefault(0);
-            if (ipadress != null)
-            {
-                return new IPEndPoint(ipadress, port);
-            }
-            return null;*/
+            /* DnsEndPoint dns = new DnsEndPoint(address, port);
+             IPAddress ipadress = Dns.GetHostEntry(address)?.AddressList.ElementAtOrDefault(0);
+             if (ipadress != null)
+             {
+                 return new IPEndPoint(ipadress, port);
+             }
+             return null;*/
+
+            return new IPEndPoint(IPAddress.Parse(address), port);
 
             var client = new LookupClient(new LookupClientOptions { UseCache = true });
             var result = await client.QueryAsync(address, QueryType.A);
@@ -127,34 +130,31 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
             Task.Run(async () =>
             {
                 //最终网站
-                TcpClient target = new TcpClient();
+                SocketConnect target = new SocketConnect();
                 try
                 {
                     while (true)
                     {
                         System.IO.Pipelines.ReadResult result = await browser.Transport.Input.ReadAsync();
-                        if (result.IsCompleted || result.IsCanceled)
-                        {
-                            break;
-                        }
-
-                        if (result.Buffer.Length > 0)
+                        if (!result.Buffer.IsEmpty)
                         {
                             var message = Message.ParsePack(result.Buffer.ToArray());
                             if (message.Item1 != null)
-                            {      
-                                var data = Crypto.DecryptAES(message.Item1.Content);
+                            {
+                                var data = message.Item1.Content;
+                                //var data = Crypto.DecryptAES(message.Item1.Content);
                                 Socket5Info socket5Info = new Socket5Info();
                                 if (socket5Info.TryParse(data))
                                 {
+                                    await target.ConnectAsync(System.Text.Encoding.UTF8.GetString(socket5Info.Address), socket5Info.Port);
                                     //连接到服务器
-                                    var ipEndPoint = await GetIpEndPointAsync(System.Text.Encoding.UTF8.GetString(socket5Info.Address), socket5Info.Port);
-                                    if(ipEndPoint == null)
-                                    {
-                                        break;
-                                    }
+                                    //var ipEndPoint = await GetIpEndPointAsync(System.Text.Encoding.UTF8.GetString(socket5Info.Address), socket5Info.Port);
+                                    //if(ipEndPoint == null)
+                                    //{
+                                    //    break;
+                                    //}
 
-                                    await target.ConnectAsync(ipEndPoint.Address,ipEndPoint.Port);
+                                    //await target.ConnectAsync(ipEndPoint.Address,ipEndPoint.Port);
 
                                     byte[] sendData = new byte[] { 0x05, 0x00, 0x00, 0x01, 0x7f, 0x00, 0x00, 0x01, 0x1f, 0x40 };
                                     //发送确认到浏览器
@@ -166,7 +166,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                                 else
                                 {
                                     //发送数据到目标服务器
-                                    await target.Client.SendAsync(data,SocketFlags.None);
+                                    await target.TcpClient.Client.SendAsync(data, SocketFlags.None);
                                 }
 
                                 browser.Transport.Input.AdvanceTo(result.Buffer.GetPosition(message.Item2));
@@ -174,6 +174,14 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                             else
                             {
                                 browser.Transport.Input.AdvanceTo(result.Buffer.GetPosition(0));
+                            }
+
+                        }
+                        else
+                        {
+                            if (result.IsCompleted || result.IsCanceled)
+                            {
+                                break;
                             }
                         }
                     }
@@ -190,7 +198,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
         /// <summary>
         /// 监听网站目标服务器
         /// </summary>
-        public static void ProcessTargetServer(ConnectionContext browser, TcpClient target)
+        public static void ProcessTargetServer(ConnectionContext browser, SocketConnect target)
         {
             Task.Run(async () =>
             {
@@ -198,24 +206,29 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets
                 {
                     while (true)
                     {
-                        byte[] buff = new byte[8192];
-                        var realLenth = await target.Client.ReceiveAsync(buff, SocketFlags.None);
-
-                        if (realLenth == 0)
+                        var readResult = await target.PipeReader.ReadAsync();
+                        if (!readResult.Buffer.IsEmpty)
                         {
-                            break;
+                            SequencePosition position = readResult.Buffer.Start;
+                            if (readResult.Buffer.TryGet(ref position, out var memory))
+                            {
+
+                                //发往浏览器
+                                await browser.Transport.Output.WriteAsync(memory);
+
+                                target.PipeReader.AdvanceTo(readResult.Buffer.GetPosition(memory.Length));
+                            }
                         }
                         else
                         {
-                            var result = new byte[realLenth];
-                            Array.Copy(buff, result, realLenth);
-
-                            //发往浏览器
-                            await browser.Transport.Output.WriteAsync(result.ToArray());
+                            if (readResult.IsCanceled || readResult.IsCompleted)
+                            {
+                                break;
+                            }
                         }
                     }
 
-                    target.Dispose();
+                    await target.PipeReader.CompleteAsync();
                 }
                 catch (Exception ex)
                 {

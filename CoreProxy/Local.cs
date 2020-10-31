@@ -1,6 +1,7 @@
 ﻿using CoreProxy.Common;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
+using ServerWebApplication;
 using System;
 using System.Buffers;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace CoreProxy
     //local端处理
     public class Message
     {
-        
+
         public byte[] Content { get; set; }
 
 
@@ -99,11 +100,10 @@ namespace CoreProxy
         {
             Task.Run(async () =>
             {
-                TcpClient target = new TcpClient();
-                target.NoDelay = false;
+                SocketConnect target = new SocketConnect();
                 try
                 {
-                    await target.ConnectAsync(IPAddress.Parse(remoteAddress), remotePort);
+                    await target.ConnectAsync(remoteAddress, remotePort);
 
                     ProcessTaget(browser, target);
                     while (true)
@@ -127,11 +127,11 @@ namespace CoreProxy
                         }
                         else
                         {
-                            var pack = Message.MakePack(new Message { Content = Crypto.EncryptAES(buff.ToArray()) });
-
+                            //var pack = Message.MakePack(new Message { Content = Crypto.EncryptAES(buff.ToArray()) });
+                            var pack = Message.MakePack(new Message { Content = buff.ToArray() });
 
                             //发送数据到服务器
-                            await target.Client.SendAsync(pack,SocketFlags.None);
+                            await target.TcpClient.Client.SendAsync(pack, SocketFlags.None);
                             //await target.Pipe.Output.WriteAsync(pack);
                         }
 
@@ -148,7 +148,7 @@ namespace CoreProxy
         }
 
         //处理目标服务器
-        private Task ProcessTaget(ConnectionContext browser, TcpClient target)
+        private Task ProcessTaget(ConnectionContext browser, SocketConnect target)
         {
             return Task.Run(async () =>
             {
@@ -156,28 +156,32 @@ namespace CoreProxy
                 {
                     while (true)
                     {
-                        byte[] buff = new byte[8192];
-                        var realLenth = await target.Client.ReceiveAsync(buff,SocketFlags.None);
-
-                        if (realLenth == 0)
+                        var readResult = await target.PipeReader.ReadAsync();
+                        if (!readResult.Buffer.IsEmpty)
                         {
-                            break;
+                            SequencePosition position = readResult.Buffer.Start;
+                            if (readResult.Buffer.TryGet(ref position, out var memory))
+                            {
+                                //发往浏览器
+                                await browser.Transport.Output.WriteAsync(memory);
+                                target.PipeReader.AdvanceTo(readResult.Buffer.GetPosition(memory.Length));
+                            }
                         }
                         else
                         {
-                            var result = new byte[realLenth];
-                            Array.Copy(buff, result, realLenth);
-                            //发往浏览器
-                            await browser.Transport.Output.WriteAsync(result);
+                            if (readResult.IsCanceled || readResult.IsCompleted)
+                            {
+                                break;
+                            }
                         }
                     }
+
+                    await target.PipeReader.CompleteAsync();
                 }
                 catch (Exception ex)
                 {
                     logger.LogError(ex.Message);
                 }
-
-                target.Dispose();
             });
         }
     }
